@@ -4,9 +4,9 @@ import server "github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastruct
 
 func main() {
 	config := server.NewConfig("Twitter Clone", "localhost", "8080")
-	apiServer := server.NewServer(config)
+	serverInstance := server.NewServer(config)
 
-	err := apiServer.Run()
+	err := serverInstance.Run()
 	if err != nil {
 		panic(err)
 	}
