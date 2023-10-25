@@ -6,5 +6,8 @@ func main() {
 	config := server.NewConfig("Twitter Clone", "localhost", "8080")
 	apiServer := server.NewServer(config)
 
-	apiServer.Run()
+	err := apiServer.Run()
+	if err != nil {
+		panic(err)
+	}
 }
