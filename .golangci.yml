@@ -1,0 +1,48 @@
+# .golangci.yml
+run:
+  # Cantidad de CPU asignadas a golangci-lint
+  concurrency: 4 
+  # Directorio del cual golangci-lint debería correr análisis
+  modules-download-mode: readonly
+  # Timeout para análisis, es decir, cuánto tiempo puede funcionar golangci-lint
+  deadline: 5m 
+
+linters:
+  disable-all: true
+  enable:
+    - bodyclose
+    - deadcode
+    - errcheck
+    - gofmt
+    - golint
+    - govet
+    - staticcheck
+    - structcheck
+    - typecheck
+    - unused
+    - varcheck
+
+linters-settings:
+  golint:
+    # mínimo nivel de confianza para emitir advertencias
+    min-confidence: 0
+
+  govet:
+    # Verificar si el operador cancel func es el último parámetro
+    check-shadowing: true 
+
+  gofmt:
+    # Gofmt verifica si los códigos están formateados con gofmt
+    simplify: true 
+
+issues:
+  # Excluir algunos archivos de la verificación
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - golint
+        
+  # Permitir incluir la nueva línea al final de los archivos
+  exclude:
+    - "should have a package comment"
+    - "don't use underscores in Go names"
