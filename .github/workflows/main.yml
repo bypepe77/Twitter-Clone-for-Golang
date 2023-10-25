@@ -14,7 +14,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
-        go-version: '1.19.0'
+        go-version: '1.21.0'
     - name: Run unit tests
       run: make unit-test
   lint:
@@ -24,7 +24,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
-        go-version: '1.19.0'
+        go-version: '1.21.0'
     - name: Install golangci-lint
       run: |
         go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
