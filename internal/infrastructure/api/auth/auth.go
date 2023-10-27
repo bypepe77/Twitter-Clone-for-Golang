@@ -42,7 +42,7 @@ func (a *auth) CreateUser(c *gin.Context) {
 		return
 	}
 
-	userCreated := NewUserResponse(user.Token, user.Username, user.ID)
+	userCreated := newUserResponse(user.Token, user.Username, user.ID)
 	responses.Success(http.StatusCreated, c, userCreated)
 }
 

@@ -28,7 +28,7 @@ type response struct {
 	Username string `json:"username"`
 }
 
-func NewUserResponse(token, username string, userID uint) *response {
+func newUserResponse(token, username string, userID uint) *response {
 	return &response{
 		Token:    token,
 		ID:       userID,
