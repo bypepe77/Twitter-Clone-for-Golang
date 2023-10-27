@@ -10,6 +10,7 @@ import (
 
 type Auth interface {
 	CreateUser(c *gin.Context)
+	Login(c *gin.Context)
 }
 
 type auth struct {
@@ -46,6 +47,29 @@ func (a *auth) CreateUser(c *gin.Context) {
 	responses.Success(http.StatusCreated, c, userCreated)
 }
 
+func (a *auth) Login(c *gin.Context) {
+	var payload *input
+	err := c.BindJSON(&payload)
+	if err != nil {
+		responses.Error(http.StatusBadRequest, c, ErrInvalidPayload)
+		return
+	}
+
+	message, isValid := validateInput(payload)
+	if !isValid {
+		responses.Error(http.StatusBadRequest, c, message)
+		return
+	}
+
+	user, err := a.service.Login(payload.Username, payload.Password)
+	if err != nil {
+		responses.Error(http.StatusBadRequest, c, err.Error())
+		return
+	}
+
+	userCreated := newUserResponse(user.Token, user.Username, user.ID)
+	responses.Success(http.StatusCreated, c, userCreated)
+}
 func validateInput(input *input) (string, bool) {
 	if input.Username == "" {
 		return ErrEmptyUsername, false

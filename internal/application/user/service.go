@@ -8,8 +8,14 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+const (
+	// ErrInvalidCredentials is returned when the credentials are invalid.
+	errInvalidCredentials = "invalid credentials"
+)
+
 type UserService interface {
 	CreateUser(username, password string) (*user.User, error)
+	Login(username, password string) (*user.User, error)
 }
 
 type userService struct {
@@ -52,6 +58,28 @@ func (s *userService) CreateUser(username, password string) (*user.User, error) 
 	}
 
 	return user.New(newUser.Username, "", token, newUser.ID), nil
+}
+
+func (s *userService) Login(username, password string) (*user.User, error) {
+	userRetrieved, err := s.repository.GetUserByUsername(username)
+	if err != nil {
+		return nil, err
+	}
+
+	if userRetrieved == nil {
+		return nil, errors.New(errInvalidCredentials)
+	}
+
+	if !checkPasswordHash(password, userRetrieved.Password) {
+		return nil, errors.New(errInvalidCredentials)
+	}
+
+	token, err := s.jwtManager.GenerateToken(userRetrieved.ID, userRetrieved.Username)
+	if err != nil {
+		return nil, err
+	}
+
+	return user.New(userRetrieved.Username, "", token, userRetrieved.ID), nil
 }
 
 func hashPassword(password string) (string, error) {

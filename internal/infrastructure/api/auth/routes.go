@@ -18,4 +18,5 @@ func NewRouter(routeGroup gin.RouterGroup, api Auth) *Router {
 
 func (r *Router) Register() {
 	r.routeGroup.POST("/register", r.api.CreateUser)
+	r.routeGroup.POST("/login", r.api.Login)
 }
