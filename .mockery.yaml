@@ -10,3 +10,7 @@ packages:
     config:
       recursive: true
       all: true
+  github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/jwt:
+    config:
+      recursive: true
+      all: true

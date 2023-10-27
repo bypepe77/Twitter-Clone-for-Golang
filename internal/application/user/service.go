@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/bypepe77/Twitter-Clone-for-Golang/internal/domain/user"
+	jwtManager "github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/jwt"
 )
 
 type UserService interface {
@@ -12,11 +13,13 @@ type UserService interface {
 
 type userService struct {
 	repository user.Repository
+	jwtManager jwtManager.Manager
 }
 
-func NewUserService(repository user.Repository) UserService {
+func NewUserService(repository user.Repository, jwtManager jwtManager.Manager) UserService {
 	return &userService{
 		repository: repository,
+		jwtManager: jwtManager,
 	}
 }
 

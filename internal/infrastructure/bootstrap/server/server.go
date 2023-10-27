@@ -5,6 +5,7 @@ import (
 
 	service "github.com/bypepe77/Twitter-Clone-for-Golang/internal/application/user"
 	"github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/api/auth"
+	jwtManager "github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/jwt"
 	repositories "github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/repositories/user"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -66,8 +67,9 @@ func (s *Server) healthCheck() {
 func (s *Server) RegisterAuthRoutes() {
 	// TODO: Inject dependencies
 	// Register auth routes
+	jwtManager := jwtManager.New("secret", "twitter-clone")
 	userRepository := repositories.NewUserRepository(s.db)
-	userService := service.NewUserService(userRepository)
+	userService := service.NewUserService(userRepository, jwtManager)
 	authAPI := auth.New(userService)
 	authRouter := auth.NewRouter(*s.engine.Group("/auth"), authAPI)
 	authRouter.Register()
