@@ -30,7 +30,7 @@ func (r *userRepository) CreateUser(user *user.User) error {
 	return r.db.Create(&dbUser).Error
 }
 
-// GetUserByID returns a user from the database by their usernme, if the user does not exist it returns nil.
+// GetUserByUsername returns a user from the database by their usernme, if the user does not exist it returns nil.
 // If there is an error it returns the error.
 func (r *userRepository) GetUserByUsername(username string) (*user.User, error) {
 	var user UserDBModel
