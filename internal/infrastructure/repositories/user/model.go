@@ -15,6 +15,10 @@ func (UserDBModel) TableName() string {
 	return "users"
 }
 
-func (u *UserDBModel) toUserDomainModel() *user.User {
-	return user.NewUser(u.Username, u.Password, u.ID)
+func (u *UserDBModel) toDomainModel() *user.User {
+	return &user.User{
+		ID:       u.ID,
+		Username: u.Username,
+		Password: u.Password,
+	}
 }
