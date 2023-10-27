@@ -8,6 +8,8 @@ import (
 )
 
 type UserRepository interface {
+	CreateUser(user *user.User) error
+	GetUserByUsername(username string) (*user.User, error)
 }
 
 type userRepository struct {

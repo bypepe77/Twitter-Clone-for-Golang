@@ -1,0 +1,12 @@
+inpackage: True
+testonly: False
+with-expecter: True
+filename: "{{.InterfaceNameSnake}}_mock.go"
+dir: "{{.InterfaceDir}}"
+mockname: "Mock{{.InterfaceName}}"
+
+packages:
+  github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/repositories/user:
+    config:
+      recursive: true
+      all: true
