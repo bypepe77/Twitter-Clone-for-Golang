@@ -46,5 +46,5 @@ func (r *userRepository) GetUserByUsername(username string) (*user.User, error) 
 		return nil, err
 	}
 
-	return user.toUserDomainModel(), nil
+	return user.toDomainModel(), nil
 }

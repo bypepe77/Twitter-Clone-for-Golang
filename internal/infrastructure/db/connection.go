@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	repositories "github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/repositories/user"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -22,6 +23,10 @@ func NewDatabaseConnection() (*gorm.DB, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error connecting to database: %w", err)
 	}
+
+	// Migrate the schema
+	//nolint: errcheck
+	db.AutoMigrate(&repositories.UserDBModel{})
 
 	return db, nil
 }
