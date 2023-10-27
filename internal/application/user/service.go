@@ -5,6 +5,7 @@ import (
 
 	"github.com/bypepe77/Twitter-Clone-for-Golang/internal/domain/user"
 	jwtManager "github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/jwt"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserService interface {
@@ -24,7 +25,12 @@ func NewUserService(repository user.Repository, jwtManager jwtManager.Manager) U
 }
 
 func (s *userService) CreateUser(username, password string) (*user.User, error) {
-	newUser := user.CreatBasicUser(username, password)
+	hashedPassword, err := hashPassword(password)
+	if err != nil {
+		return nil, err
+	}
+
+	newUser := user.CreatBasicUser(username, hashedPassword)
 
 	exist, err := s.repository.GetUserByUsername(username)
 	if err != nil {
@@ -40,5 +46,24 @@ func (s *userService) CreateUser(username, password string) (*user.User, error) 
 		return nil, err
 	}
 
-	return user.New(newUser.Username, "", "test-token", newUser.ID), nil
+	token, err := s.jwtManager.GenerateToken(newUser.ID, newUser.Username)
+	if err != nil {
+		return nil, err
+	}
+
+	return user.New(newUser.Username, "", token, newUser.ID), nil
+}
+
+func hashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return "", err
+	}
+	return string(bytes), nil
+}
+
+//nolint:deadcode
+func checkPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }
