@@ -1,4 +1,4 @@
-package tweetWorfklow
+package tweetworfklow
 
 import (
 	tweetDomainModel "github.com/bypepe77/Twitter-Clone-for-Golang/internal/domain/tweet"

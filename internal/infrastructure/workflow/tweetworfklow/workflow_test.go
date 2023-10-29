@@ -1,4 +1,4 @@
-package tweetWorfklow
+package tweetworfklow
 
 import (
 	"errors"
