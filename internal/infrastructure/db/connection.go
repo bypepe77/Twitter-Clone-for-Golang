@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	repositories "github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/repositories/user"
+	tweetRepository "github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/repositories/tweet"
+	userRepository "github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/repositories/user"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -26,7 +27,7 @@ func NewDatabaseConnection() (*gorm.DB, error) {
 
 	// Migrate the schema
 	//nolint: errcheck
-	db.AutoMigrate(&repositories.UserDBModel{})
+	db.AutoMigrate(&userRepository.UserDBModel{}, &tweetRepository.DBModel{})
 
 	return db, nil
 }
