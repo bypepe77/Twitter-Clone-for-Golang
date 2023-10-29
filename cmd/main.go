@@ -30,9 +30,8 @@ func main() {
 
 	tweetRepository := tweet.NewRepository(db)
 	tweetActivities := tweetWorfklow.NewTweetActivities(tweetRepository)
-	workflowInstance := tweetWorfklow.NewTweetWorkflow(tweetActivities)
 	w := worker.New(c, "TweetTaskQueue", worker.Options{})
-	w.RegisterWorkflowWithOptions(workflowInstance.ProcessTweet, workflow.RegisterOptions{Name: "ProcessTweetWorkflow"})
+	w.RegisterWorkflowWithOptions(tweetWorfklow.ProcessTweet, workflow.RegisterOptions{Name: "ProcessTweetWorkflow"})
 	w.RegisterActivity(tweetActivities.SaveTweet)
 
 	go func() {
@@ -44,7 +43,6 @@ func main() {
 
 	config := server.NewConfig("Twitter Clone", "localhost", "8080")
 
-	// Inicia el servidor REST. Puede estar en la goroutine principal
 	serverInstance := server.NewServer(config, db, c)
 	err = serverInstance.Run()
 	if err != nil {
