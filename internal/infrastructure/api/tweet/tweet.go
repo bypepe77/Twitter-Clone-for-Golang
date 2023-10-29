@@ -5,6 +5,7 @@ import (
 
 	tweetservice "github.com/bypepe77/Twitter-Clone-for-Golang/internal/application/tweet"
 	"github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/api/responses"
+	"github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/jwt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,11 +20,13 @@ type TweetAPI interface {
 
 type tweetAPI struct {
 	tweetService tweetservice.TweetService
+	jwtManager   jwt.Manager
 }
 
-func New(tweetService tweetservice.TweetService) TweetAPI {
+func New(tweetService tweetservice.TweetService, jwtManager jwt.Manager) TweetAPI {
 	return &tweetAPI{
 		tweetService: tweetService,
+		jwtManager:   jwtManager,
 	}
 }
 
@@ -41,7 +44,13 @@ func (a *tweetAPI) CreateTweet(c *gin.Context) {
 		return
 	}
 
-	err = a.tweetService.CreateTweet(payload.Content)
+	claims, err := a.jwtManager.GetClaims(c)
+	if err != nil {
+		responses.Error(http.StatusBadRequest, c, err.Error())
+		return
+	}
+
+	err = a.tweetService.CreateTweet(payload.Content, claims)
 	if err != nil {
 		responses.Error(http.StatusBadRequest, c, err.Error())
 		return
