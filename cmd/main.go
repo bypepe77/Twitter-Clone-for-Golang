@@ -8,6 +8,7 @@ import (
 	"github.com/joho/godotenv"
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/worker"
+	"go.temporal.io/sdk/workflow"
 )
 
 func main() {
@@ -31,7 +32,7 @@ func main() {
 	tweetActivities := tweetWorfklow.NewTweetActivities(tweetRepository)
 	workflowInstance := tweetWorfklow.NewTweetWorkflow(tweetActivities)
 	w := worker.New(c, "TweetTaskQueue", worker.Options{})
-	w.RegisterWorkflow(workflowInstance.ProcessTweet)
+	w.RegisterWorkflowWithOptions(workflowInstance.ProcessTweet, workflow.RegisterOptions{Name: "ProcessTweetWorkflow"})
 	w.RegisterActivity(tweetActivities.SaveTweet)
 
 	go func() {
@@ -44,7 +45,7 @@ func main() {
 	config := server.NewConfig("Twitter Clone", "localhost", "8080")
 
 	// Inicia el servidor REST. Puede estar en la goroutine principal
-	serverInstance := server.NewServer(config, db)
+	serverInstance := server.NewServer(config, db, c)
 	err = serverInstance.Run()
 	if err != nil {
 		panic(err)
