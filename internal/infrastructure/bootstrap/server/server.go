@@ -6,6 +6,7 @@ import (
 	tweetservice "github.com/bypepe77/Twitter-Clone-for-Golang/internal/application/tweet"
 	service "github.com/bypepe77/Twitter-Clone-for-Golang/internal/application/user"
 	"github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/api/auth"
+	"github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/api/middlewares"
 	tweetapi "github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/api/tweet"
 	jwtManager "github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/jwt"
 	repositories "github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/repositories/user"
@@ -80,9 +81,9 @@ func (s *Server) RegisterAuthRoutes() {
 	authRouter.Register()
 
 	//Register tweet routes
-	tweetService := tweetservice.New(jwtManager, s.temporalClient)
-	tweetAPI := tweetapi.New(tweetService)
-	tweetRouter := tweetapi.NewRouter(*s.engine.Group("/tweet"), tweetAPI)
+	tweetService := tweetservice.New(s.temporalClient)
+	tweetAPI := tweetapi.New(tweetService, jwtManager)
+	tweetRouter := tweetapi.NewRouter(*s.engine.Group("/tweet", middlewares.Authorize(jwtManager)), tweetAPI)
 	tweetRouter.Register()
 
 }
