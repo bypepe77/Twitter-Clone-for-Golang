@@ -4,7 +4,7 @@ import (
 	server "github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/bootstrap/server"
 	"github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/db"
 	"github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/repositories/tweet"
-	tweetWorfklow "github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/workflow/tweet"
+	tweetWorfklow "github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/workflow/tweetworfklow"
 	"github.com/joho/godotenv"
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/worker"
