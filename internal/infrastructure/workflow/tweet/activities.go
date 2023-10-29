@@ -5,6 +5,8 @@ import (
 	"github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/repositories/tweet"
 )
 
+var SaveTweetReference = (&tweetActivities{}).SaveTweet
+
 type TweetActivities interface {
 	SaveTweet(tweet *tweetDomainModel.Tweet) error
 }
@@ -19,7 +21,7 @@ func NewTweetActivities(tweetRepository tweet.Repository) TweetActivities {
 	}
 }
 
-// SaveTweet saves a tweet in the database and will be in charge of extracting the hashtags and mentions
+// SaveTweet saves a tweet in the database
 func (a *tweetActivities) SaveTweet(tweet *tweetDomainModel.Tweet) error {
 	return a.tweetRepository.SaveTweet(tweet)
 }
