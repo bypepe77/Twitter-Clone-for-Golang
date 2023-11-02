@@ -15,5 +15,6 @@ func NewRouter(routeGroup gin.RouterGroup, api TweetAPI) *Router {
 }
 
 func (r *Router) Register() {
-	r.routeGroup.POST("/", r.api.CreateTweet)
+	r.routeGroup.POST("/new", r.api.CreateTweet)
+	r.routeGroup.GET("/:id", r.api.GetTweet)
 }

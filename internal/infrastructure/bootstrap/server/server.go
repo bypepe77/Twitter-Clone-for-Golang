@@ -9,6 +9,7 @@ import (
 	"github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/api/middlewares"
 	tweetapi "github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/api/tweet"
 	jwtManager "github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/jwt"
+	tweetRepository "github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/repositories/tweet"
 	repositories "github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/repositories/user"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -17,18 +18,21 @@ import (
 )
 
 type Server struct {
-	config         *Config
-	engine         *gin.Engine
-	db             *gorm.DB
-	temporalClient client.Client
+	config          *Config
+	engine          *gin.Engine
+	db              *gorm.DB
+	temporalClient  client.Client
+	tweetRepository tweetRepository.Repository
 }
 
-func NewServer(config *Config, db *gorm.DB, temporalClient client.Client) *Server {
+func NewServer(config *Config, db *gorm.DB, temporalClient client.Client,
+	tweetRepository tweetRepository.Repository) *Server {
 	return &Server{
-		config:         config,
-		engine:         gin.Default(),
-		db:             db,
-		temporalClient: temporalClient,
+		config:          config,
+		engine:          gin.Default(),
+		db:              db,
+		temporalClient:  temporalClient,
+		tweetRepository: tweetRepository,
 	}
 }
 
@@ -81,7 +85,8 @@ func (s *Server) RegisterAuthRoutes() {
 	authRouter.Register()
 
 	//Register tweet routes
-	tweetService := tweetservice.New(s.temporalClient)
+
+	tweetService := tweetservice.New(s.temporalClient, s.tweetRepository)
 	tweetAPI := tweetapi.New(tweetService, jwtManager)
 	tweetRouter := tweetapi.NewRouter(*s.engine.Group("/tweet", middlewares.Authorize(jwtManager)), tweetAPI)
 	tweetRouter.Register()
