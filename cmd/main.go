@@ -43,7 +43,7 @@ func main() {
 
 	config := server.NewConfig("Twitter Clone", "localhost", "8080")
 
-	serverInstance := server.NewServer(config, db, c)
+	serverInstance := server.NewServer(config, db, c, tweetRepository)
 	err = serverInstance.Run()
 	if err != nil {
 		panic(err)

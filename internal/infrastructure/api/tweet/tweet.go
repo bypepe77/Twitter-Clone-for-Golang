@@ -2,6 +2,7 @@ package tweetapi
 
 import (
 	"net/http"
+	"strconv"
 
 	tweetservice "github.com/bypepe77/Twitter-Clone-for-Golang/internal/application/tweet"
 	"github.com/bypepe77/Twitter-Clone-for-Golang/internal/infrastructure/api/responses"
@@ -16,6 +17,7 @@ const (
 
 type TweetAPI interface {
 	CreateTweet(c *gin.Context)
+	GetTweet(c *gin.Context)
 }
 
 type tweetAPI struct {
@@ -57,6 +59,23 @@ func (a *tweetAPI) CreateTweet(c *gin.Context) {
 	}
 
 	responses.Success(http.StatusCreated, c, "tweet created successfully")
+}
+
+func (a *tweetAPI) GetTweet(c *gin.Context) {
+	id := c.Param("id")
+	intID, err := strconv.Atoi(id)
+	if err != nil {
+		responses.Error(http.StatusBadRequest, c, err.Error())
+		return
+	}
+
+	tweet, err := a.tweetService.GetTweet(uint(intID))
+	if err != nil {
+		responses.Error(http.StatusBadRequest, c, err.Error())
+		return
+	}
+
+	responses.Success(http.StatusOK, c, toTweetResponse(tweet))
 }
 
 func validateTweetInput(payload *tweetInput) (string, bool) {
